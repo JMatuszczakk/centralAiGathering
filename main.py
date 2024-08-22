@@ -44,7 +44,7 @@ def upload_image():
         os.rename(os.path.join(app.config['UPLOAD_FOLDER'], filename), os.path.join('verified', filename))
         #remove the image from the uploads folder
         os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        
+
 
 
 if __name__ == '__main__':
