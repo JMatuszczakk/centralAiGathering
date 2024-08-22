@@ -2,7 +2,8 @@ from flask import Flask, request, jsonify
 from werkzeug.utils import secure_filename
 import os
 from generatePrompt import generatePrompt as get_prompt
-
+from colors import check_color_similarity
+from PIL import Image
 app = Flask(__name__)
 
 # Configure upload folder
@@ -16,6 +17,13 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 def serve_prompt():
     prompt = get_prompt()  # Get prompt from the imported function
     return jsonify({"prompt": prompt})
+
+
+def verifyImage(filename):
+    #open the image
+    img = Image.open(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    return check_color_similarity(img)
+
 
 @app.route('/upload', methods=['POST'])
 def upload_image():
@@ -31,6 +39,13 @@ def upload_image():
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         return jsonify({"message": "Image uploaded successfully", "filename": filename}), 200
+    if verifyImage(filename):
+        #copy the image to the verified folder
+        os.rename(os.path.join(app.config['UPLOAD_FOLDER'], filename), os.path.join('verified', filename))
+        #remove the image from the uploads folder
+        os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5001)
