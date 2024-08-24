@@ -5,6 +5,7 @@ from generatePrompt import generatePrompt as get_prompt
 from colors import check_color_similarity
 from PIL import Image
 import random
+import shutil
 app = Flask(__name__)
 
 # Configure upload folder
@@ -13,6 +14,25 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Ensure the upload folder exists
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+
+def move_verified_image(filename):
+    source_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    destination_path = os.path.join('verified', filename)
+    
+    try:
+        # Ensure the destination directory exists
+        os.makedirs(os.path.dirname(destination_path), exist_ok=True)
+        
+        # Use shutil.move instead of os.rename for cross-device moves
+        shutil.move(source_path, destination_path)
+        print(f"Successfully moved {filename} to verified folder.")
+    except FileNotFoundError:
+        print(f"Error: The file {filename} was not found in the upload folder.")
+    except PermissionError:
+        print(f"Error: Permission denied when trying to move {filename}.")
+    except Exception as e:
+        print(f"An unexpected error occurred while moving {filename}: {str(e)}")
 
 @app.route('/prompt', methods=['GET'])
 def serve_prompt():
