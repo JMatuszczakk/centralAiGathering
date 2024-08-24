@@ -70,10 +70,8 @@ def upload_image():
 
         return jsonify({"message": "Image uploaded successfully", "filename": filename}), 200
     if verifyImage(filename):
-        #copy the image to the verified folder
-        os.rename(os.path.join(app.config['UPLOAD_FOLDER'], filename), os.path.join('verified', filename))
-        #remove the image from the uploads folder
-        os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        move_verified_image(filename)
+        return jsonify({"message": "Image uploaded successfully", "filename": filename}), 200
 
 
 
