@@ -66,7 +66,8 @@ def upload_image():
     if verifyImage(filename):
         move_verified_image(filename)
         return jsonify({"message": "Image uploaded successfully", "filename": filename}), 200
-
+    else:
+        return jsonify({"error": "Image failed verification"}), 200
 
 
 if __name__ == '__main__':
