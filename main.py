@@ -23,6 +23,7 @@ def serve_prompt():
 def verifyImage(filename):
     #open the image
     img = Image.open(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    print(check_color_similarity(img))
     return check_color_similarity(img)
 
 
