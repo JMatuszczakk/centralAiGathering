@@ -4,6 +4,7 @@ import os
 from generatePrompt import generatePrompt as get_prompt
 from colors import check_color_similarity
 from PIL import Image
+import random
 app = Flask(__name__)
 
 # Configure upload folder
@@ -37,7 +38,14 @@ def upload_image():
     
     if file:
         filename = secure_filename(file.filename)
+        filename = filename+random.randint(0, 1000000)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        if verifyImage(filename):
+            #copy the image to the verified folder
+            os.rename(os.path.join(app.config['UPLOAD_FOLDER'], filename), os.path.join('verified', filename))
+            #remove the image from the uploads folder
+            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
         return jsonify({"message": "Image uploaded successfully", "filename": filename}), 200
     if verifyImage(filename):
         #copy the image to the verified folder
