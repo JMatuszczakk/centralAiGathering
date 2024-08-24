@@ -38,7 +38,7 @@ def upload_image():
     
     if file:
         filename = secure_filename(file.filename)
-        filename = filename+random.randint(0, 1000000)
+        filename = filename+str(random.randint(0, 1000000))
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         if verifyImage(filename):
             #copy the image to the verified folder
