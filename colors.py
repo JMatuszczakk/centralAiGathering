@@ -9,5 +9,8 @@ def check_color_similarity(img):
     bottom_right = img.getpixel((width - 1, height - 1))
     
     similarity_threshold = 10
+    print(f"Center bottom: {center_bottom}")
+    print(f"Bottom right: {bottom_right}")
+    print(f"Color distance: {color_distance(center_bottom, bottom_right)}")
     
     return color_distance(center_bottom, bottom_right) < similarity_threshold
