@@ -62,13 +62,7 @@ def upload_image():
         filename = filename.split('.')[0]+str(random.randint(0, 1000000))+'.'+filename.split('.')[1]
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         
-        if verifyImage(filename):
-            #copy the image to the verified folder
-            os.rename(os.path.join(app.config['UPLOAD_FOLDER'], filename), os.path.join('verified', filename))
-            #remove the image from the uploads folder
-            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-        return jsonify({"message": "Image uploaded successfully", "filename": filename}), 200
     if verifyImage(filename):
         move_verified_image(filename)
         return jsonify({"message": "Image uploaded successfully", "filename": filename}), 200
